@@ -14,6 +14,10 @@ This microservice is responsible for:
 * Java SDK 21
 * A MySQL server
 
+## init project spring boot:
+https://start.spring.io/
+
+
 ## Start application
 `mvn spring-boot:run`
 
