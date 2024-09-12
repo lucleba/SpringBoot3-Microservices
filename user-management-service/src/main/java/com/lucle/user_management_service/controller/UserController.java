@@ -4,6 +4,7 @@ import com.lucle.user_management_service.dto.UserCreationRequest;
 import com.lucle.user_management_service.dto.UserUpdateRequest;
 import com.lucle.user_management_service.entity.User;
 import com.lucle.user_management_service.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User createUser(@RequestBody UserCreationRequest request) {
+    public User createUser(@RequestBody @Valid UserCreationRequest request) {
         return userService.createUser(request);
     }
 
