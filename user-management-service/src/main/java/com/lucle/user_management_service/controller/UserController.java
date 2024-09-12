@@ -1,5 +1,6 @@
 package com.lucle.user_management_service.controller;
 
+import com.lucle.user_management_service.dto.ApiResponse;
 import com.lucle.user_management_service.dto.UserCreationRequest;
 import com.lucle.user_management_service.dto.UserUpdateRequest;
 import com.lucle.user_management_service.entity.User;
@@ -17,8 +18,11 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User createUser(@RequestBody @Valid UserCreationRequest request) {
-        return userService.createUser(request);
+    public ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.createUser(request));
+
+        return apiResponse;
     }
 
     @GetMapping

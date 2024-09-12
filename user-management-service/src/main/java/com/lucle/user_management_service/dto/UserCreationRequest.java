@@ -1,5 +1,6 @@
 package com.lucle.user_management_service.dto;
 
+import com.lucle.user_management_service.exception.ErrorCode;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,10 +14,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-    @Size(min = 4, message = "USERNAME_INVALID")
+    @Size(min = 4, message = "USERNAME_INVALID") // goi den enum ErrorCode USERNAME_INVALID
     String username;
 
-    @Size(min = 6, message = "INVALID_PASSWORD. Password must be at least 6 characters.")
+    @Size(min = 6, message = "PASSWORD_INVALID")
     String password;
 
     String firstName;

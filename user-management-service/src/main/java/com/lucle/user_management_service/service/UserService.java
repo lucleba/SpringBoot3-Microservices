@@ -3,6 +3,8 @@ package com.lucle.user_management_service.service;
 import com.lucle.user_management_service.dto.UserCreationRequest;
 import com.lucle.user_management_service.dto.UserUpdateRequest;
 import com.lucle.user_management_service.entity.User;
+import com.lucle.user_management_service.exception.AppException;
+import com.lucle.user_management_service.exception.ErrorCode;
 import com.lucle.user_management_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class UserService {
         User user = new User();
 
         if(userRepository.existsByUsername(request.getUsername()))
-            throw new RuntimeException("User existed.");
+            throw new AppException(ErrorCode.USER_EXISTED);
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
         user.setFirstName(request.getFirstName());
