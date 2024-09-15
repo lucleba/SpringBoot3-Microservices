@@ -1,14 +1,12 @@
-package com.lucle.user_management_service.dto;
+package com.lucle.user_management_service.dto.request;
 
-import com.lucle.user_management_service.exception.ErrorCode;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

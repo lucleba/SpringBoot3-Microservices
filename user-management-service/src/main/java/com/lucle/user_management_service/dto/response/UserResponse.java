@@ -1,25 +1,20 @@
-package com.lucle.user_management_service.dto;
+package com.lucle.user_management_service.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
-
-    //    @Size(min = 6, message = "INVALID_PASSWORD")
+public class UserResponse {
+    String id;
+    String username;
     String password;
-
     String firstName;
     String lastName;
-
-    //    @DobConstraint(min = 10, message = "INVALID_DOB")
     LocalDate dob;
-
 }

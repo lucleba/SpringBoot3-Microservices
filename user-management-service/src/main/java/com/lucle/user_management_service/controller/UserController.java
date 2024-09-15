@@ -1,21 +1,25 @@
 package com.lucle.user_management_service.controller;
 
-import com.lucle.user_management_service.dto.ApiResponse;
-import com.lucle.user_management_service.dto.UserCreationRequest;
-import com.lucle.user_management_service.dto.UserUpdateRequest;
+import com.lucle.user_management_service.dto.response.ApiResponse;
+import com.lucle.user_management_service.dto.request.UserCreationRequest;
+import com.lucle.user_management_service.dto.request.UserUpdateRequest;
+import com.lucle.user_management_service.dto.response.UserResponse;
 import com.lucle.user_management_service.entity.User;
 import com.lucle.user_management_service.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
-    @Autowired
-    private UserService userService;
+    final UserService userService; //su dung final de khai bao cho RequiredArgsConstructor
 
     @PostMapping
     public ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
@@ -31,12 +35,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable String id) {
+    public UserResponse getUser(@PathVariable String id) {
         return userService.getUser(id);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
+    public UserResponse updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
         return userService.updateUser(id, request);
     }
 
