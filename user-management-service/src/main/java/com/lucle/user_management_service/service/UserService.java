@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
-    final UserRepository userRepository;
+    final UserRepository userRepository; // su dung final de khai bao cho RequiredArgsConstructor
     final UserMapper userMapper;
 
     public User createUser(UserCreationRequest request) {
