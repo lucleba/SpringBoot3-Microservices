@@ -8,17 +8,19 @@ import com.lucle.user_management_service.exception.AppException;
 import com.lucle.user_management_service.exception.ErrorCode;
 import com.lucle.user_management_service.mapper.UserMapper;
 import com.lucle.user_management_service.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
+    final UserRepository userRepository;
+    final UserMapper userMapper;
 
     public User createUser(UserCreationRequest request) {
         if(userRepository.existsByUsername(request.getUsername()))
