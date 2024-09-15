@@ -1,6 +1,6 @@
 package com.lucle.user_management_service.exception;
 
-import com.lucle.user_management_service.dto.ApiResponse;
+import com.lucle.user_management_service.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,4 +1,4 @@
-package com.lucle.user_management_service.dto;
+package com.lucle.user_management_service.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

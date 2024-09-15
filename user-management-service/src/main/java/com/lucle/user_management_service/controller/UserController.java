@@ -1,8 +1,9 @@
 package com.lucle.user_management_service.controller;
 
-import com.lucle.user_management_service.dto.ApiResponse;
-import com.lucle.user_management_service.dto.UserCreationRequest;
-import com.lucle.user_management_service.dto.UserUpdateRequest;
+import com.lucle.user_management_service.dto.response.ApiResponse;
+import com.lucle.user_management_service.dto.request.UserCreationRequest;
+import com.lucle.user_management_service.dto.request.UserUpdateRequest;
+import com.lucle.user_management_service.dto.response.UserResponse;
 import com.lucle.user_management_service.entity.User;
 import com.lucle.user_management_service.service.UserService;
 import jakarta.validation.Valid;
@@ -31,12 +32,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable String id) {
+    public UserResponse getUser(@PathVariable String id) {
         return userService.getUser(id);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
+    public UserResponse updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
         return userService.updateUser(id, request);
     }
 
