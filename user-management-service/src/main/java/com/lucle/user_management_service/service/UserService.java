@@ -17,15 +17,17 @@ public class UserService {
     private UserRepository userRepository;
 
     public User createUser(UserCreationRequest request) {
-        User user = new User();
+
 
         if(userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setDob(request.getDob());
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .dob(request.getDob())
+                .build();
 
         return userRepository.save(user);
 //        return user;
