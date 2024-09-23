@@ -1,5 +1,6 @@
 package com.lucle.user_management_service.configuration;
 
+import com.lucle.user_management_service.enums.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,8 +35,8 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(rq ->
                 rq.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, "/users")
-                        .hasAnyAuthority("ROLE_ADMIN")
-
+//                        .hasAnyAuthority("ROLE_ADMIN")
+                        .hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated()
         );
 
