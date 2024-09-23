@@ -30,24 +30,33 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUser() {
-        return userService.getAllUser();
+    ApiResponse<List<UserResponse>> getUsers(){
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getAllUser())
+                .build();
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable String id) {
-        return userService.getUser(id);
+    public ApiResponse<UserResponse> getUser(@PathVariable String id) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUser(id))
+                .build();
     }
 
     @PutMapping("/{id}")
-    public UserResponse updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
-        return userService.updateUser(id, request);
+    public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
+
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.updateUser(id, request))
+                .build();
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable String id) {
+    public ApiResponse<String> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
-        return "User deleted successfully";
+        return ApiResponse.<String>builder()
+                .result("User deleted successfully")
+                .build();
     }
 
 }
