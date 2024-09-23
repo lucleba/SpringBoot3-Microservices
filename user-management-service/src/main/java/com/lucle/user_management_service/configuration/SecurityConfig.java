@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -32,13 +34,18 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(rq ->
                 rq.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, "/users")
-                        .hasAnyAuthority("SCOPE_ADMIN")
+                        .hasAnyAuthority("ROLE_ADMIN")
+
                         .anyRequest().authenticated()
         );
 
         // decode token de kiem tra token hop le hay k
         httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
+                oauth2.jwt(
+                        jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                                // override Bean convertor
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                )
         );
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
@@ -52,6 +59,18 @@ public class SecurityConfig {
 //                .httpBasic(Customizer.withDefaults())
 //                .formLogin(Customizer.withDefaults());
 //        return http.build();
+    }
+
+    @Bean
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
+        // thay prefix bang SCOPE_ thanh ROLE_
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
+        return jwtAuthenticationConverter;
     }
 
     @Bean
