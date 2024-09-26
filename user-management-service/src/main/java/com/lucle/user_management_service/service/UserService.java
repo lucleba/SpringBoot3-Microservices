@@ -51,7 +51,9 @@ public class UserService {
                 .map(userMapper::toUserResponse).toList();
     }
 
-    @PostAuthorize("hasRole('ADMIN')")
+//    https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html
+//    @PostAuthorize("hasRole('ADMIN')")
+    @PostAuthorize("returnObject.username == authentication.name") // lay thong tin cua chính mình
     public UserResponse getUser(String id){
         log.info("in method get user by id");
         return userMapper.toUserResponse(userRepository.findById(id)
