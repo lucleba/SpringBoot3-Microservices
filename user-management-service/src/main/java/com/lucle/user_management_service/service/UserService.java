@@ -12,7 +12,9 @@ import com.lucle.user_management_service.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class UserService {
     UserRepository userRepository; // su dung final de khai bao cho RequiredArgsConstructor
     UserMapper userMapper;
@@ -41,14 +44,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUser() {
+        log.info("In method get all user.");
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponse).toList();
     }
 
+    @PostAuthorize("hasRole('ADMIN')")
     public UserResponse getUser(String id){
+        log.info("in method get user by id");
         return userMapper.toUserResponse(userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found")));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
     public UserResponse updateUser(String userId,UserUpdateRequest request) {
