@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
@@ -23,4 +24,6 @@ public class User {
     String firstName;
     LocalDate dob;
     String lastName;
+
+    Set<String> roles;
 }

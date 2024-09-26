@@ -4,6 +4,7 @@ import com.lucle.user_management_service.dto.request.AuthenticationRequest;
 import com.lucle.user_management_service.dto.request.IntrospectRequest;
 import com.lucle.user_management_service.dto.response.AuthenticationResponse;
 import com.lucle.user_management_service.dto.response.IntrospectResponse;
+import com.lucle.user_management_service.entity.User;
 import com.lucle.user_management_service.exception.AppException;
 import com.lucle.user_management_service.exception.ErrorCode;
 import com.lucle.user_management_service.repository.UserRepository;
@@ -21,11 +22,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Slf4j
 @Service
@@ -66,7 +69,7 @@ public class AuthenticationService {
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!authenticated)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
-        var token = generateToken(user.getUsername());
+        var token = generateToken(user);
 
         return AuthenticationResponse.builder()
                 .authenticated(true)
@@ -74,11 +77,11 @@ public class AuthenticationService {
                 .build();
     }
 
-    private String generateToken(String username){
+    private String generateToken(User user){
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuer("lucle.com")
                 .issueTime(new Date())
                 .expirationTime(
@@ -86,7 +89,7 @@ public class AuthenticationService {
                                 Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                         )
                 )
-                .claim("customClaim", "Custom")
+                .claim("scope", buildScope(user))
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);
@@ -98,5 +101,13 @@ public class AuthenticationService {
             log.error("Can not generate token", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private String buildScope(User user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if(!CollectionUtils.isEmpty(user.getRoles())){
+            user.getRoles().forEach(stringJoiner::add);
+        }
+        return  stringJoiner.toString();
     }
 }
