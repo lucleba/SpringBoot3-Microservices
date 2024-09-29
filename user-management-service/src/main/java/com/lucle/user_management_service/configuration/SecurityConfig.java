@@ -49,6 +49,7 @@ public class SecurityConfig {
                                 // override Bean convertor
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())
                 )
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
