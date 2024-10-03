@@ -8,6 +8,7 @@ import com.lucle.user_management_service.enums.Role;
 import com.lucle.user_management_service.exception.AppException;
 import com.lucle.user_management_service.exception.ErrorCode;
 import com.lucle.user_management_service.mapper.UserMapper;
+import com.lucle.user_management_service.repository.RoleRepository;
 import com.lucle.user_management_service.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class UserService {
     UserRepository userRepository; // su dung final de khai bao cho RequiredArgsConstructor
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+    RoleRepository roleRepository;
 
     public User createUser(UserCreationRequest request) {
         if(userRepository.existsByUsername(request.getUsername()))
@@ -45,7 +47,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
+//@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('APPROVE_POST')")
     public List<UserResponse> getAllUser() {
         log.info("In method get all user.");
         return userRepository.findAll().stream()
@@ -78,6 +82,10 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         userMapper.updateUser(user, request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
