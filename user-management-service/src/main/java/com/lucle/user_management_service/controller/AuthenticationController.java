@@ -2,6 +2,7 @@ package com.lucle.user_management_service.controller;
 
 import com.lucle.user_management_service.dto.request.AuthenticationRequest;
 import com.lucle.user_management_service.dto.request.IntrospectRequest;
+import com.lucle.user_management_service.dto.request.LogoutRequest;
 import com.lucle.user_management_service.dto.response.ApiResponse;
 import com.lucle.user_management_service.dto.response.AuthenticationResponse;
 import com.lucle.user_management_service.dto.response.IntrospectResponse;
@@ -38,6 +39,14 @@ public class AuthenticationController {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder()
                 .result(result)
+                .build();
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request)
+            throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder()
                 .build();
     }
 }
