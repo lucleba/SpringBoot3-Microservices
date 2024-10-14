@@ -3,6 +3,7 @@ package com.lucle.user_management_service.service;
 import com.lucle.user_management_service.dto.request.AuthenticationRequest;
 import com.lucle.user_management_service.dto.request.IntrospectRequest;
 import com.lucle.user_management_service.dto.request.LogoutRequest;
+import com.lucle.user_management_service.dto.request.RefreshRequest;
 import com.lucle.user_management_service.dto.response.AuthenticationResponse;
 import com.lucle.user_management_service.dto.response.IntrospectResponse;
 import com.lucle.user_management_service.entity.InvalidatedToken;
@@ -46,6 +47,14 @@ public class AuthenticationService {
     @Value("${jwt.signerKey}")
     protected String signerKey;
 
+    @NonFinal // danh dau de khong inject vao contractor
+    @Value("${jwt.valid-duration}")
+    protected int validDuration;
+
+    @NonFinal // danh dau de khong inject vao contractor
+    @Value("${jwt.refreshable-duration}")
+    protected int refreshableDuration;
+
 
     public IntrospectResponse introspect(IntrospectRequest request)
             throws JOSEException, ParseException {
@@ -73,11 +82,14 @@ public class AuthenticationService {
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!authenticated)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
-        var token = generateToken(user);
+        String jwtId = UUID.randomUUID().toString();
+        var token = generateToken(user, jwtId, false);
+        var refreshToken = generateToken(user, jwtId, true);
 
         return AuthenticationResponse.builder()
                 .authenticated(true)
                 .token(token)
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -95,7 +107,37 @@ public class AuthenticationService {
         invalidatedTokenRepository.save(invalidatedToken);
     }
 
-    private String generateToken(User user){
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken());
+
+        var jit = signedJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        var type = signedJWT.getJWTClaimsSet().getClaim("typ").toString();
+        if (!"Refresh".equals(type))
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        InvalidatedToken invalidatedToken =
+                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signedJWT.getJWTClaimsSet().getSubject();
+
+        var user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        String jwtId = UUID.randomUUID().toString();
+        var token = generateToken(user, jwtId, false);
+        var refreshToken = generateToken(user, jwtId, true);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .refreshToken(refreshToken)
+                .authenticated(true)
+                .build();
+    }
+
+    private String generateToken(User user, String jwtId, boolean isrefreshable) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -103,12 +145,16 @@ public class AuthenticationService {
                 .issuer("lucle.com")
                 .issueTime(new Date())
                 .expirationTime(
+                        isrefreshable ? new Date(
+                                Instant.now().plus(refreshableDuration, ChronoUnit.SECONDS).toEpochMilli()
+                        ):
                         new Date(
-                                Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                                Instant.now().plus(validDuration, ChronoUnit.SECONDS).toEpochMilli()
                         )
                 )
-                .jwtID(UUID.randomUUID().toString())
+                .jwtID(jwtId)
                 .claim("scope", buildScope(user))
+                .claim("typ", isrefreshable ? "Refresh" : "Bearer")
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);
