@@ -25,11 +25,12 @@ public class UserController {
     final UserService userService; //su dung final de khai bao cho RequiredArgsConstructor
 
     @PostMapping
-    public ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
-        ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.createUser(request));
-
-        return apiResponse;
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+        log.info("Controller: create User");
+        return ApiResponse.<UserResponse>builder()
+                .code(1000)
+                .result(userService.createUser(request))
+                .build();
     }
 
     @GetMapping

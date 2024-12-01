@@ -33,18 +33,21 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
 
-    public User createUser(UserCreationRequest request) {
-        if(userRepository.existsByUsername(request.getUsername()))
-            throw new AppException(ErrorCode.USER_EXISTED);
-        User user = userMapper.toUser(request);
+    public UserResponse createUser(UserCreationRequest request) {
+        log.info("Service: Create User");
 
+        if (userRepository.existsByUsername(request.getUsername()))
+            throw new AppException(ErrorCode.USER_EXISTED);
+
+        User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-//        HashSet<String> roles = new HashSet<>();
-//        roles.add(Role.USER.name());
-//        user.setRoles(roles);
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name());
 
-        return userRepository.save(user);
+        // user.setRoles(roles);
+
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
 //    @PreAuthorize("hasRole('ADMIN')")
