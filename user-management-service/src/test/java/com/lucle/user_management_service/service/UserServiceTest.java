@@ -1,26 +1,28 @@
 package com.lucle.user_management_service.service;
 
-import com.lucle.user_management_service.dto.request.UserCreationRequest;
-import com.lucle.user_management_service.dto.response.UserResponse;
-import com.lucle.user_management_service.entity.User;
-import com.lucle.user_management_service.exception.AppException;
-import com.lucle.user_management_service.repository.UserRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestPropertySource;
+
+import com.lucle.user_management_service.dto.request.UserCreationRequest;
+import com.lucle.user_management_service.dto.response.UserResponse;
+import com.lucle.user_management_service.entity.User;
+import com.lucle.user_management_service.exception.AppException;
+import com.lucle.user_management_service.repository.UserRepository;
 
 @SpringBootTest
+@TestPropertySource("/test.properties")
 class UserServiceTest {
 
     @Autowired
@@ -29,15 +31,13 @@ class UserServiceTest {
     @MockBean
     private UserRepository userRepository;
 
-
     private UserCreationRequest request;
     private UserResponse userResponse;
     private User user;
     private LocalDate dob;
 
-
     @BeforeEach
-    void initData(){
+    void initData() {
         dob = LocalDate.of(1990, 1, 1);
 
         request = UserCreationRequest.builder()
@@ -66,7 +66,7 @@ class UserServiceTest {
     }
 
     @Test
-    void createUser_validRequest_success(){
+    void createUser_validRequest_success() {
         // GIVEN
         when(userRepository.existsByUsername(anyString())).thenReturn(false);
         when(userRepository.save(any())).thenReturn(user);
@@ -80,16 +80,14 @@ class UserServiceTest {
     }
 
     @Test
-    void createUser_userExisted_fail(){
+    void createUser_userExisted_fail() {
         // GIVEN
         when(userRepository.existsByUsername(anyString())).thenReturn(true);
 
         // WHEN
-        var exception = assertThrows(AppException.class,
-                () -> userService.createUser(request));
+        var exception = assertThrows(AppException.class, () -> userService.createUser(request));
 
         // THEN
-        Assertions.assertThat(exception.getErrorCode().getCode())
-                .isEqualTo(1002);
+        Assertions.assertThat(exception.getErrorCode().getCode()).isEqualTo(1002);
     }
 }

@@ -1,6 +1,5 @@
 package com.lucle.user_management_service.configuration;
 
-import com.lucle.user_management_service.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,23 +11,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-
-import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENDPOINTS = {"/users",
-            "/auth/token", "/auth/introspect", "/auth/logout"
-    };
+    private final String[] PUBLIC_ENDPOINTS = {"/users", "/auth/token", "/auth/introspect", "/auth/logout"};
+
     @Value("${jwt.signerKey}")
     private String signerKey;
 
@@ -38,35 +31,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.authorizeHttpRequests(rq ->
-                rq.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/users")
-////                        .hasAnyAuthority("ROLE_ADMIN")
-//                        .hasRole(Role.ADMIN.name())
-                        .anyRequest().authenticated()
-        );
+        httpSecurity.authorizeHttpRequests(rq -> rq.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                .permitAll()
+                //                        .requestMatchers(HttpMethod.GET, "/users")
+                ////                        .hasAnyAuthority("ROLE_ADMIN")
+                //                        .hasRole(Role.ADMIN.name())
+                .anyRequest()
+                .authenticated());
 
         // decode token de kiem tra token hop le hay k
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(
-                        jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)
-                                // override Bean convertor
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
-                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-        );
+        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
+                        .decoder(customJwtDecoder)
+                        // override Bean convertor
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
 
-//        http
-//                .csrf(Customizer.withDefaults())
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .anyRequest().authenticated()
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .formLogin(Customizer.withDefaults());
-//        return http.build();
+        //        http
+        //                .csrf(Customizer.withDefaults())
+        //                .authorizeHttpRequests(authorize -> authorize
+        //                        .anyRequest().authenticated()
+        //                )
+        //                .httpBasic(Customizer.withDefaults())
+        //                .formLogin(Customizer.withDefaults());
+        //        return http.build();
     }
 
     @Bean
@@ -85,5 +75,4 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
-
 }

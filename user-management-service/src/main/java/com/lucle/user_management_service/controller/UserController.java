@@ -1,20 +1,22 @@
 package com.lucle.user_management_service.controller;
 
-import com.lucle.user_management_service.dto.response.ApiResponse;
+import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
 import com.lucle.user_management_service.dto.request.UserCreationRequest;
 import com.lucle.user_management_service.dto.request.UserUpdateRequest;
+import com.lucle.user_management_service.dto.response.ApiResponse;
 import com.lucle.user_management_service.dto.response.UserResponse;
-import com.lucle.user_management_service.entity.User;
 import com.lucle.user_management_service.service.UserService;
-import jakarta.validation.Valid;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -22,7 +24,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserController {
-    final UserService userService; //su dung final de khai bao cho RequiredArgsConstructor
+    final UserService userService; // su dung final de khai bao cho RequiredArgsConstructor
 
     @PostMapping
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
@@ -34,12 +36,13 @@ public class UserController {
     }
 
     @GetMapping
-    ApiResponse<List<UserResponse>> getUsers(){
+    ApiResponse<List<UserResponse>> getUsers() {
         // lay thong tin nguoi dung hien tai trong 1 request
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("username: {}", authentication.getName());
-        authentication.getAuthorities().forEach(
-                grantedAuthority -> log.info("Roles: {}", grantedAuthority.getAuthority()));
+        authentication
+                .getAuthorities()
+                .forEach(grantedAuthority -> log.info("Roles: {}", grantedAuthority.getAuthority()));
 
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getAllUser())
@@ -71,9 +74,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ApiResponse<String> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
-        return ApiResponse.<String>builder()
-                .result("User deleted successfully")
-                .build();
+        return ApiResponse.<String>builder().result("User deleted successfully").build();
     }
-
 }

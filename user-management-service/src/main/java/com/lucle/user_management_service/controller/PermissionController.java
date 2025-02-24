@@ -1,19 +1,20 @@
 package com.lucle.user_management_service.controller;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.lucle.user_management_service.dto.request.PermissionRequest;
-import com.lucle.user_management_service.dto.request.UserCreationRequest;
 import com.lucle.user_management_service.dto.response.ApiResponse;
 import com.lucle.user_management_service.dto.response.PermissionResponse;
-import com.lucle.user_management_service.entity.User;
 import com.lucle.user_management_service.service.PermissionService;
-import jakarta.validation.Valid;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/permissions")
