@@ -1,20 +1,21 @@
 package com.lucle.user_management_service.configuration;
 
-import com.lucle.user_management_service.entity.User;
-import com.lucle.user_management_service.enums.Role;
-import com.lucle.user_management_service.repository.UserRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.HashSet;
+
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashSet;
+import com.lucle.user_management_service.entity.User;
+import com.lucle.user_management_service.enums.Role;
+import com.lucle.user_management_service.repository.UserRepository;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @RequiredArgsConstructor
@@ -25,10 +26,10 @@ public class ApplicationInitConfig {
     PasswordEncoder passwordEncoder;
 
     @Bean
-    @ConditionalOnProperty(prefix = "spring",
+    @ConditionalOnProperty(
+            prefix = "spring",
             value = "datasource.driverClassName",
-            havingValue = "com.mysql.cj.jdbc.Driver"
-    )
+            havingValue = "com.mysql.cj.jdbc.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository) {
 
         return args -> {
@@ -39,7 +40,7 @@ public class ApplicationInitConfig {
                 userRepository.save(User.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin"))
-//                        .roles(roles)
+                        //                        .roles(roles)
                         .build());
                 log.warn("admin user has created with default password: admin");
             }

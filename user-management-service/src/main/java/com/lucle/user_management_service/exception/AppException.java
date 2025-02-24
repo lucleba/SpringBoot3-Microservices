@@ -1,6 +1,6 @@
 package com.lucle.user_management_service.exception;
 
-public class AppException extends RuntimeException{
+public class AppException extends RuntimeException {
 
     private ErrorCode errorCode;
 

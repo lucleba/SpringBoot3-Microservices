@@ -1,10 +1,11 @@
 package com.lucle.user_management_service.dto.response;
 
+import java.util.Set;
+
 import com.lucle.user_management_service.entity.Permission;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

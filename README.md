@@ -23,3 +23,19 @@ https://start.spring.io/
 
 ## Build application
 `mvn clean package`
+
+## Test application
+Thêm file `test.properties` vào folder `src/test/resources`
+Thêm annotation `@TestPropertySource("/test.properties")` vào class test.
+ 
+## Jacoco tutorial
+thêm build > plugins >  plugin > jacoco-maven-plugin
+cách 1: đóng gói wrapper và chạy test:
+`mvn wrapper:wrapper`
+`./mvnw test jacoco:report`
+
+cách 2: chạy trực tiếp bằng lệnh mvn
+`mvn test jacoco:report`
+
+loại bỏ những class coverage thêm exclude trong file pom.xml: 
+`<exclude>com/devteria/identityservice/dto/**</exclude>'
