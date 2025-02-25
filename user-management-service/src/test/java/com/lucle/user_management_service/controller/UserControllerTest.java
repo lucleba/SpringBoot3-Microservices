@@ -42,11 +42,10 @@ class UserControllerTest {
     private UserCreationRequest request;
     private UserResponse userResponse;
     private User user;
-    private LocalDate dob;
 
     @BeforeEach
     void initData() {
-        dob = LocalDate.of(1990, 1, 1);
+        LocalDate dob = LocalDate.of(1990, 1, 1);
 
         request = UserCreationRequest.builder()
                 .username("john")
