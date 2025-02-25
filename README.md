@@ -30,6 +30,7 @@ Thêm annotation `@TestPropertySource("/test.properties")` vào class test.
  
 ## Jacoco tutorial
 thêm build > plugins >  plugin > jacoco-maven-plugin
+
 cách 1: đóng gói wrapper và chạy test:
 `mvn wrapper:wrapper`
 `./mvnw test jacoco:report`
@@ -39,3 +40,6 @@ cách 2: chạy trực tiếp bằng lệnh mvn
 
 loại bỏ những class coverage thêm exclude trong file pom.xml: 
 `<exclude>com/devteria/identityservice/dto/**</exclude>'
+
+## Integration test
+thêm dependency: `testcontainers-bom`, `testcontainers-junit-jupiter`, `testcontainers-mysql`
