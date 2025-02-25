@@ -15,6 +15,7 @@ spring:
     show-sql: true
 
 jwt:
-  signerKey: "OIZpkwRnu0bwgWR1A/Jp4QJeoFCjxLyRzz1MBcnbnhix8c3Io1NJ/qU4kCIV+6sQ"
+  #  truy cap trang web de gen key: https://generate-random.org/ > encryption-key-generator
+  signerKey: "dvIeRFqELCrrkkKY1bPk7/IHbaC6dlJerXr5/N2f6j0MdgGVDkaiO3Yc+2PIJ0Sv"
   valid-duration: 3600 # in second
   refreshable-duration: 36000 # in seconds

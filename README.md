@@ -43,3 +43,21 @@ loại bỏ những class coverage thêm exclude trong file pom.xml:
 
 ## Integration test
 thêm dependency: `testcontainers-bom`, `testcontainers-junit-jupiter`, `testcontainers-mysql`
+
+## Run application with profile:
+Edit Configurations > Modify Option > Add VM Options
+![img.png](img.png)
+
+## Set Bien Moi Truong
+Cách 1: su dung theo mac dinh cua spring
+
+https://docs.spring.io/spring-boot/reference/features/external-config.html#features.external-config.typesafe-configuration-properties.relaxed-binding.environment-variables
+
+Thay thế dấu chấm (.) trong file application.properties bằng dấu gạch dưới (_). vd: spring.datasource.url => SPRING_DATASOURCE_URL
+
+chuyển tất cả các chữ cái thành chữ in hoa.
+
+Bỏ dấu gạch ngang (-). vd: spring.jpa.hibernate.ddl-auto => SPRING_JPA_HIBERNATE_DDLAUTO
+
+Cách 2: tự thiết lập biến và gọi tên biến bằng ${tên_biên_môi_trường:giá_trị_mặc_định_nếu_không_có_biên_mt}
+

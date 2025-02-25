@@ -1,0 +1,21 @@
+server:
+  port: 8089
+  servlet:
+    context-path: /identity
+
+spring:
+  datasource:
+    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/identity_service}
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    username: ${DBMS_USERNAME:root}
+    password: ${DBMS_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+#  truy cap trang web de gen key: https://generate-random.org/ > encryption-key-generator
+  signerKey: "dvIeRFqELCrrkkKY1bPk7/IHbaC6dlJerXr5/N2f6j0MdgGVDkaiO3Yc+2PIJ0Sv"
+  valid-duration: 1800 # in second
+  refreshable-duration: 18000 # in seconds

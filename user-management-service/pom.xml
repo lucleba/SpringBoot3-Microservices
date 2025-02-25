@@ -8,7 +8,7 @@
 		<version>3.2.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.devteria</groupId>
+	<groupId>com.lucle</groupId>
 	<artifactId>identity-service</artifactId>
 	<name>identity-service</name>
 	<version>0.0.1-SNAPSHOT</version>
@@ -177,10 +177,10 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/devteria/identityservice/dto/**</exclude>
-						<exclude>com/devteria/identityservice/entity/**</exclude>
-						<exclude>com/devteria/identityservice/mapper/**</exclude>
-						<exclude>com/devteria/identityservice/configuration/**</exclude>
+						<exclude>com/lucle/user_management_service/dto/**</exclude>
+						<exclude>com/lucle/user_management_service/entity/**</exclude>
+						<exclude>com/lucle/user_management_service/mapper/**</exclude>
+						<exclude>com/lucle/user_management_service/configuration/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
