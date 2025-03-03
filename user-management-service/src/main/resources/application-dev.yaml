@@ -14,6 +14,20 @@ spring:
       ddl-auto: update
     show-sql: true
 
+# application-dev.yml
+springdoc:
+  show-actuator: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+openapi:
+  service:
+    api-docs: backend-service
+    server: http://localhost:${server.port}
+    title: Backend service
+    version: 1.0.0
+
 jwt:
   #  truy cap trang web de gen key: https://generate-random.org/ > encryption-key-generator
   signerKey: "dvIeRFqELCrrkkKY1bPk7/IHbaC6dlJerXr5/N2f6j0MdgGVDkaiO3Yc+2PIJ0Sv"
