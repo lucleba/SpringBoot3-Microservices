@@ -1,9 +1,7 @@
 package com.lucle.user_management_service.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lucle.user_management_service.dto.request.UserCreationRequest;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +16,11 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.lucle.user_management_service.dto.request.UserCreationRequest;
 
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
@@ -31,17 +32,21 @@ class UserControllerIntegrationTest {
     static final MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:latest");
 
     @DynamicPropertySource
-    static void configureDataSource(DynamicPropertyRegistry registry){
+    static void configureDataSource(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", MY_SQL_CONTAINER::getJdbcUrl);
         registry.add("spring.datasource.username", MY_SQL_CONTAINER::getUsername);
         registry.add("spring.datasource.password", MY_SQL_CONTAINER::getPassword);
-        registry.add("spring.datasource.driverClassName", ()->"com.mysql.cj.jdbc.Driver"); //        registry.add("spring.datasource.username" MY_SQL_CONTAINER::getUsername);
-        registry.add("spring.jpa.hibernate.ddl-auto", ()->"update");
-
+        registry.add(
+                "spring.datasource.driverClassName",
+                () -> "com.mysql.cj.jdbc.Driver"); //        registry.add("spring.datasource.username"
+        // MY_SQL_CONTAINER::getUsername);
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
+        registry.add("jwt.signerKey", () -> "test-signing-key-for-development-only");
     }
 
     @Autowired
     private MockMvc mockMvc;
+
     private UserCreationRequest request;
 
     @BeforeEach
@@ -55,7 +60,6 @@ class UserControllerIntegrationTest {
                 .password("12345678")
                 .dob(dob)
                 .build();
-
     }
 
     @Test
@@ -68,13 +72,11 @@ class UserControllerIntegrationTest {
         // WHEN
         // THEN
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
-                .contentType("application/json")
-                .content(content))
+                        .contentType("application/json")
+                        .content(content))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(1000))
                 .andExpect(MockMvcResultMatchers.jsonPath("result.username").value("john"))
-                .andExpect(MockMvcResultMatchers.jsonPath("result.lastName").value("Doe"))
-                ;
+                .andExpect(MockMvcResultMatchers.jsonPath("result.lastName").value("Doe"));
     }
-
 }
