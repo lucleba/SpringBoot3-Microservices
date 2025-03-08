@@ -1,0 +1,14 @@
+# prometheus.yml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+  - job_name: 'identity-service'
+    metrics_path: '/identity/actuator/prometheus'
+    static_configs:
+      - targets: [ "identity-service:8089" ]
+        labels:
+          application: 'Identity Service'

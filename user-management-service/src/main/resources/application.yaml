@@ -1,0 +1,19 @@
+server:
+  port: 8089
+  servlet:
+    context-path: /identity
+spring:
+  application:
+    name: identity-service
+  profiles:
+    active: @spring.profiles.active@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    root: INFO
+    web: INFO
