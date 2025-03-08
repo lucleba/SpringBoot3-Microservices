@@ -1,9 +1,9 @@
-server:
-  port: 8089
-  servlet:
-    context-path: /identity
-
 spring:
+  config:
+    activate:
+      on-profile: pro
+  devtools:
+    add-properties: true
   datasource:
     url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/identity_service}
     driverClassName: "com.mysql.cj.jdbc.Driver"

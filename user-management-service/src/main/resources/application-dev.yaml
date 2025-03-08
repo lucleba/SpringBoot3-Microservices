@@ -1,14 +1,14 @@
-server:
-  port: 8089
-  servlet:
-    context-path: /identity
-
 spring:
+  config:
+    activate:
+      on-profile: dev
+  devtools:
+    add-properties: true
   datasource:
-    url: "jdbc:mysql://localhost:3306/identity_service"
+    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/identity_service}
     driverClassName: "com.mysql.cj.jdbc.Driver"
-    username: root
-    password: root
+    username: ${DBMS_USERNAME:root}
+    password: ${DBMS_PASSWORD:root}
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,18 +18,19 @@ spring:
 springdoc:
   show-actuator: true
   api-docs:
+    path: /v3/api-docs
     enabled: true
   swagger-ui:
     enabled: true
 openapi:
   service:
-    api-docs: backend-service
-    server: http://localhost:${server.port}
-    title: Backend service
+    api-docs: identity-service
+    server: http://localhost:${server.port}${server.servlet.context-path}
+    title: Identity service
     version: 1.0.0
-
 jwt:
   #  truy cap trang web de gen key: https://generate-random.org/ > encryption-key-generator
   signerKey: "dvIeRFqELCrrkkKY1bPk7/IHbaC6dlJerXr5/N2f6j0MdgGVDkaiO3Yc+2PIJ0Sv"
   valid-duration: 3600 # in second
   refreshable-duration: 36000 # in seconds
+

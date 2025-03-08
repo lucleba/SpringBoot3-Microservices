@@ -21,7 +21,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENDPOINTS = {"/users", "/auth/token", "/auth/introspect", "/auth/logout"};
+    private final String[] PUBLIC_ENDPOINTS = {
+        "/users",
+        "/auth/token",
+        "/auth/introspect",
+        "/auth/logout",
+        "/actuator/**",
+        "/v3/**",
+        "/webjars/**",
+        "/swagger-ui*/*swagger-initializer.js",
+        "/swagger-ui*/**",
+        "/favicon.ico"
+    };
 
     @Value("${jwt.signerKey}")
     private String signerKey;
@@ -33,6 +44,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.authorizeHttpRequests(rq -> rq.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                .permitAll()
+                .requestMatchers(PUBLIC_ENDPOINTS)
                 .permitAll()
                 //                        .requestMatchers(HttpMethod.GET, "/users")
                 ////                        .hasAnyAuthority("ROLE_ADMIN")
@@ -81,6 +94,12 @@ public class SecurityConfig {
     public WebSecurityCustomizer ignoreResources() {
         return webSecurity -> webSecurity
                 .ignoring()
-                .requestMatchers("/actuator/**", "/v3/**", "/webjars/**", "/swagger-ui*/*swagger-initializer.js", "/swagger-ui*/**", "/favicon.ico");
+                .requestMatchers(
+                        "/actuator/**",
+                        "/v3/**",
+                        "/webjars/**",
+                        "/swagger-ui*/*swagger-initializer.js",
+                        "/swagger-ui*/**",
+                        "/favicon.ico");
     }
 }

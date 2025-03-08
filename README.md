@@ -23,6 +23,7 @@ https://start.spring.io/
 
 ## Build application
 `mvn clean package`
+`mvn clean package -P dev|test|uat|prod`
 
 ## Test application
 Thêm file `test.properties` vào folder `src/test/resources`
@@ -60,4 +61,8 @@ chuyển tất cả các chữ cái thành chữ in hoa.
 Bỏ dấu gạch ngang (-). vd: spring.jpa.hibernate.ddl-auto => SPRING_JPA_HIBERNATE_DDLAUTO
 
 Cách 2: tự thiết lập biến và gọi tên biến bằng ${tên_biên_môi_trường:giá_trị_mặc_định_nếu_không_có_biên_mt}
+
+## Docker
+`docker build -t identity-service .`
+`docker run -d identity-service:latest identity-service -p 8080:8080 `
 
