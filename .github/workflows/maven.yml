@@ -27,6 +27,9 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file /home/runner/work/SpringBoot3-Microservice-Usermanagement/SpringBoot3-Microservice-Usermanagement/user-management-service/pom.xml
+    - name: Locate POM file
+      id: locate-pom
+      run: echo "POM_PATH=$(find . -name 'pom.xml')" >> $GITHUB_ENV
 
+    - name: Build with Maven
+      run: mvn -B package --file ${{ env.POM_PATH }}
