@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lucle.user_management_service.dto.request.AuthenticationRequest;
 import com.lucle.user_management_service.dto.request.IntrospectRequest;
 import com.lucle.user_management_service.dto.request.LogoutRequest;
+import com.lucle.user_management_service.dto.request.RefreshRequest;
 import com.lucle.user_management_service.dto.response.ApiResponse;
 import com.lucle.user_management_service.dto.response.AuthenticationResponse;
 import com.lucle.user_management_service.dto.response.IntrospectResponse;
@@ -38,6 +39,13 @@ public class AuthenticationController {
             throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder().result(result).build();
+    }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
     }
 
     @PostMapping("/logout")
