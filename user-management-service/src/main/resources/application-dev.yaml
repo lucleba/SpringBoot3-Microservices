@@ -18,14 +18,16 @@ spring:
 springdoc:
   show-actuator: true
   api-docs:
-    path: /v3/api-docs
+#    path: /v3/api-docs
     enabled: true
   swagger-ui:
     enabled: true
+#    path: /swagger-ui.html
+#    config-url: /v3/api-docs/swagger-config
 openapi:
   service:
     api-docs: identity-service
-    server: http://localhost:${server.port}${server.servlet.context-path}
+    server: http://localhost:${server.port}/identity
     title: Identity service
     version: 1.0.0
 jwt:

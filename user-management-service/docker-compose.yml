@@ -16,9 +16,11 @@ services:
 
   identity-service:
     container_name: identity-service
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: thienluc/identity-service:v1
+#    platform: linux/amd64
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile
     ports:
       - "8089:8089"
     environment:
