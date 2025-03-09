@@ -20,6 +20,7 @@
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 		<spotless.version>2.43.0</spotless.version>
 		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+		<image.path>registry.hub.docker.com/thienluc</image.path>
 	</properties>
 	<dependencies>
 <!--		<dependency>-->
@@ -262,6 +263,38 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<useSystemClassLoader>false</useSystemClassLoader>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.4</version>
+				<configuration>
+					<from>
+						<image>openjdk:21</image>
+					</from>
+					<to>
+						<image>${image.path}/${project.artifactId}:v1</image>
+						<!-- Setting dockerhub account -->
+<!--						<auth>-->
+<!--							&lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;-->
+<!--							<username>${env.DOCKER_USERNAME}</username>-->
+<!--							&lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;-->
+<!--							<password>${env.DOCKER_PASSWORD}</password>-->
+<!--						</auth>-->
+						<auth>
+						<username>thienluc</username>
+						<password>Thienlucpm2@!</password>
+					</auth>
+					</to>
+					<container>
+						<ports>
+							<port>8089</port>
+						</ports>
+						<environment>
+							<SPRING_PROFILES_ACTIVE>dev</SPRING_PROFILES_ACTIVE>
+						</environment>
+					</container>
 				</configuration>
 			</plugin>
 		</plugins>

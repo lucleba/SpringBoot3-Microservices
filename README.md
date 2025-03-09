@@ -64,5 +64,14 @@ Cách 2: tự thiết lập biến và gọi tên biến bằng ${tên_biên_mô
 
 ## Docker
 `docker build -t identity-service .`
+
 `docker run -d identity-service:latest identity-service -p 8080:8080 `
+
+## Jib plugin:
+https://github.com/GoogleContainerTools/jib/blob/master/jib-maven-plugin/README.md
+
+* Build và đưa image vào Docker daemon (local Docker): Lệnh này sẽ tạo image và lưu vào Docker daemon trên máy của chúng ta.
+`mvn package jib:dockerBuild`
+* Build và push image trực tiếp lên container registry: 
+`mvn package jib:build`
 
