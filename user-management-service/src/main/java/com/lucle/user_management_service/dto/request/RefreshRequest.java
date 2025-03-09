@@ -1,4 +1,4 @@
-package com.lucle.user_management_service.dto.response;
+package com.lucle.user_management_service.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,8 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationResponse {
+public class RefreshRequest {
     String token;
-    String refreshToken;
-    boolean authenticated;
 }
